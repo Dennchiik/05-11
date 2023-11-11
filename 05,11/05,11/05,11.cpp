@@ -1,155 +1,141 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 
-enum Тип { Птица, Скот, Человек };
+enum Type { Bird, Animal, Human };
 
-union Характеристика {
-    double скорость_полета;
-    bool парнокопытное;
-    int уровень_IQ;
+union Characteristic {
+    double flight_speed;
+    bool hooves;
+    int IQ_level;
 };
 
-struct ЖиваяСущность {
-    double скорость_передвижения;
-    Тип тип;
-    std::string цвет;
-    Характеристика характеристика;
+struct LivingEntity {
+    double movement_speed;
+    Type type;
+    std::string color;
+    Characteristic characteristics;
 };
 
-void вводИнформации(ЖиваяСущность& сущность) {
-    std::cout << "Введите скорость передвижения: ";
-    std::cin >> сущность.скорость_передвижения;
-    std::cout << "Введите тип (0 - Птица, 1 - Скот, 2 - Человек): ";
-    int тип;
-    std::cin >> тип;
-    сущность.тип = static_cast<Тип>(тип);
-    std::cout << "Введите цвет: ";
+void inputInformation(LivingEntity& entity) {
+    std::cout << "Enter movement speed: ";
+    std::cin >> entity.movement_speed;
+    std::cout << "Enter type (0 - Bird, 1 - Animal, 2 - Human): ";
+    int type;
+    std::cin >> type;
+    entity.type = static_cast<Type>(type);
+    std::cout << "Enter color: ";
     std::cin.ignore();
-    std::getline(std::cin, сущность.цвет);
+    std::getline(std::cin, entity.color);
 
-    if (сущность.тип == Птица) {
-        std::cout << "Введите скорость полета: ";
-        std::cin >> сущность.характеристика.скорость_полета;
-    }
-    else if (сущность.тип == Скот) {
-        std::cout << "Это парнокопытное? (1 - Да, 0 - Нет): ";
-        std::cin >> сущность.характеристика.парнокопытное;
-    }
-    else if (сущность.тип == Человек) {
-        std::cout << "Введите уровень IQ: ";
-        std::cin >> сущность.характеристика.уровень_IQ;
+    if (entity.type == Bird) {
+        std::cout << "Enter flight speed: ";
+        std::cin >> entity.characteristics.flight_speed;
+    } else if (entity.type == Animal) {
+        std::cout << "Is it hooved? (1 - Yes, 0 - No): ";
+        std::cin >> entity.characteristics.hooves;
+    } else if (entity.type == Human) {
+        std::cout << "Enter IQ level: ";
+        std::cin >> entity.characteristics.IQ_level;
     }
 }
 
-void печатьИнформации(const ЖиваяСущность& сущность) {
-    std::cout << "Скорость передвижения: " << сущность.скорость_передвижения << std::endl;
-    std::cout << "Тип: ";
-    if (сущность.тип == Птица) {
-        std::cout << "Птица" << std::endl;
-        std::cout << "Скорость полета: " << сущность.характеристика.скорость_полета << std::endl;
+void printInformation(const LivingEntity& entity) {
+    std::cout << "Movement speed: " << entity.movement_speed << std::endl;
+    std::cout << "Type: ";
+    if (entity.type == Bird) {
+        std::cout << "Bird" << std::endl;
+        std::cout << "Flight speed: " << entity.characteristics.flight_speed << std::endl;
+    } else if (entity.type == Animal) {
+        std::cout << "Animal" << std::endl;
+        std::cout << "Hooves: " << (entity.characteristics.hooves ? "Yes" : "No") << std::endl;
+    } else if (entity.type == Human) {
+        std::cout << "Human" << std::endl;
+        std::cout << "IQ level: " << entity.characteristics.IQ_level << std::endl;
     }
-    else if (сущность.тип == Скот) {
-        std::cout << "Скот" << std::endl;
-        std::cout << "Парнокопытное: " << (сущность.характеристика.парнокопытное ? "Да" : "Нет") << std::endl;
-    }
-    else if (сущность.тип == Человек) {
-        std::cout << "Человек" << std::endl;
-        std::cout << "Уровень IQ: " << сущность.характеристика.уровень_IQ << std::endl;
-    }
-    std::cout << "Цвет: " << сущность.цвет << std::endl;
+    std::cout << "Color: " << entity.color << std::endl;
 }
 
-void редактироватьДанные(ЖиваяСущность& сущность) {
-    вводИнформации(сущность);
+void editData(LivingEntity& entity) {
+    inputInformation(entity);
 }
 
-void печатьСписка(const ЖиваяСущность* список, int размер) {
-    for (int i = 0; i < размер; i++) {
-        std::cout << "Живая сущность #" << i + 1 << ":" << std::endl;
-        печатьИнформации(список[i]);
+void printList(const LivingEntity* list, int size) {
+    for (int i = 0; i < size; i++) {
+        std::cout << "Living Entity #" << i + 1 << ":" << std::endl;
+        printInformation(list[i]);
         std::cout << std::endl;
     }
 }
 
-void поискПоХарактеристике(const ЖиваяСущность* список, int размер, double значение) {
-    for (int i = 0; i < размер; i++) {
-        if (список[i].тип == Птица && список[i].характеристика.скорость_полета == значение) {
-            std::cout << "Найдено: Птица с скоростью полета " << значение << std::endl;
-            печатьИнформации(список[i]);
+void searchByCharacteristic(const LivingEntity* list, int size, double value) {
+    for (int i = 0; i < size; i++) {
+        if (list[i].type == Bird && list[i].characteristics.flight_speed == value) {
+            std::cout << "Found: Bird with flight speed " << value << std::endl;
+            printInformation(list[i]);
             std::cout << std::endl;
-        }
-        else if (список[i].тип == Скот && список[i].характеристика.парнокопытное == static_cast<bool>(значение)) {
-            std::cout << "Найдено: Скот с парнокопытным = " << (значение ? "Да" : "Нет") << std::endl;
-            печатьИнформации(список[i]);
+        } else if (list[i].type == Animal && list[i].characteristics.hooves == static_cast<bool>(value)) {
+            std::cout << "Found: Animal with hooves = " << (value ? "Yes" : "No") << std::endl;
+            printInformation(list[i]);
             std::cout << std::endl;
-        }
-        else if (список[i].тип == Человек && список[i].характеристика.уровень_IQ == static_cast<int>(значение)) {
-            std::cout << "Найдено: Человек с уровнем IQ " << значение << std::endl;
-            печатьИнформации(список[i]);
+        } else if (list[i].type == Human && list[i].characteristics.IQ_level == static_cast<int>(value)) {
+            std::cout << "Found: Human with IQ level " << value << std::endl;
+            printInformation(list[i]);
             std::cout << std::endl;
         }
     }
 }
 
 int main() {
-    const int размерСписка = 10;
-    ЖиваяСущность список[размерСписка];
+    const int listSize = 10;
+    LivingEntity list[listSize];
 
-    for (int i = 0; i < размерСписка; i++) {
-        вводИнформации(список[i]);
+    for (int i = 0; i < listSize; i++) {
+        inputInformation(list[i]);
     }
 
     while (true) {
-        std::cout << "Меню:" << std::endl;
-        std::cout << "1. Редактировать данные" << std::endl;
-        std::cout << "2. Печать всего списка" << std::endl;
-        std::cout << "3. Поиск по характеристике" << std::endl;
-        std::cout << "4. Выход" << std::endl;
+        std::cout << "Menu:" << std::endl;
+        std::cout << "1. Edit data" << std::endl;
+        std::cout << "2. Print entire list" << std::endl;
+        std::cout << "3. Search by characteristic" << std::endl;
+        std::cout << "4. Exit" << std::endl;
 
-        int выбор;
-        std::cin >> выбор;
+        int choice;
+        std::cin >> choice;
 
-        if (выбор == 1) {
-            int индекс;
-            std::cout << "Введите индекс живой сущности для редактирования: ";
-            std::cin >> индекс;
-            if (индекс >= 1 && индекс <= размерСписка) {
-                редактироватьДанные(список[индекс - 1]);
+        if (choice == 1) {
+            int index;
+            std::cout << "Enter the index of the living entity to edit: ";
+            std::cin >> index;
+            if (index >= 1 && index <= listSize) {
+                editData(list[index - 1]);
+            } else {
+                std::cout << "Invalid index." << std::endl;
             }
-            else {
-                std::cout << "Неверный индекс." << std::endl;
-            }
-        }
-        else if (выбор == 2) {
-            печатьСписка(список, размерСписка);
-        }
-        else if (выбор == 3) {
-            int тип;
-            std::cout << "Введите тип для поиска (0 - Птица, 1 - Скот, 2 - Человек): ";
-            std::cin >> тип;
-            if (тип >= 0 && тип <= 2) {
-                double значение;
-                if (тип == 0) {
-                    std::cout << "Введите скорость полета для поиска: ";
+        } else if (choice == 2) {
+            printList(list, listSize);
+        } else if (choice == 3) {
+            int type;
+            std::cout << "Enter type for searching (0 - Bird, 1 - Animal, 2 - Human): ";
+            std::cin >> type;
+            if (type >= 0 && type <= 2) {
+                double value;
+                if (type == 0) {
+                    std::cout << "Enter flight speed to search: ";
+                } else if (type == 1) {
+                    std::cout << "Enter hooves (1 - Yes, 0 - No) to search: ";
+                } else if (type == 2) {
+                    std::cout << "Enter IQ level to search: ";
                 }
-                else if (тип == 1) {
-                    std::cout << "Введите парнокопытное для поиска (1 - Да, 0 - Нет): ";
-                }
-                else if (тип == 2) {
-                    std::cout << "Введите уровень IQ для поиска: ";
-                }
-                std::cin >> значение;
-                поискПоХарактеристике(список, размерСписка, значение);
+                std::cin >> value;
+                searchByCharacteristic(list, listSize, value);
+            } else {
+                std << "Invalid type." << std::endl;
             }
-            else {
-                std::cout << "Неверный тип." << std::endl;
-            }
-        }
-        else if (выбор == 4) {
+        } else if (choice == 4) {
             break;
-        }
-        else {
-            std::cout << "Неверный выбор." << std::endl;
+        } else {
+            std::cout << "Invalid choice." << std::endl;
         }
     }
 
